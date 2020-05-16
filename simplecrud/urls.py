@@ -20,7 +20,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('polls/', include('polls.urls'))
+    path('polls/', include('polls.urls', namespace='polls'))
     #path('pollsclass/', include('pollsclass.urls'))
 ]
 

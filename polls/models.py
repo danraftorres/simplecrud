@@ -10,5 +10,5 @@ class Article(models.Model):
     name = models.CharField(max_length=150)
     description = models.TextField(null=True, blank=True)
     quantity = models.IntegerField(default=0)
-    image = models.ImageField(upload_to='articles')
+    image = models.ImageField(upload_to='uploads/')
     category = models.ForeignKey(Category,default=None, on_delete=models.CASCADE, related_name='articles')
