@@ -9,3 +9,6 @@ def create_author_view(request):
 
 def author_list_view(request):
     return render(request, 'polls/author/list.html', {})
+
+def create_book_view(request):
+    return render(request, 'polls/book/create.html', {})

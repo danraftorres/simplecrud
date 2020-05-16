@@ -1,4 +1,4 @@
-"""crud-django URL Configuration
+"""simplecrud URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
@@ -27,3 +27,4 @@ urlpatterns = [
 # Agregamos ruta de media files a las urlpatterns
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
