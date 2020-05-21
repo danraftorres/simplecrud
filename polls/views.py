@@ -1,49 +1,117 @@
-from django.shortcuts import redirect, render
-from django.urls import reverse, reverse_lazy
-from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect, render, get_object_or_404
+from django.urls import reverse
+from django.http import HttpResponseRedirect
 from polls.models import Category, Article
+from polls.forms import ArticleForm, ArticleModelForm, CategoryForm, CategoryModelForm
 from django.contrib import messages
 
 # Create your views here.
-def article_new(request):
+
+
+def article_create_view(request):
 
     if request.method == 'POST':
-        try:
 
-            category = Category.objects.get(id=request.POST['category_id'])
+        form = ArticleForm(request.POST)
 
-            article = Article(name=request.POST['name'], 
-                            description=request.POST['description'],
-                            quantity=request.POST['quantity'], 
-                            image=request.FILES['image'], 
-                            category=category)
+        if form.is_valid():
+            #form.save()
+            #print(form)
+            # try:
+            #     article = Article()
+            #     article.name = request.POST['name']
+            #     article.description = request.POST['description']
+            #     article.price = request.POST['price']
 
-       
-            article.save()
+            #     """Si contiene la imagen también la creamos"""
+            #     if len(request.FILES) != 0:
+            #         article.image = request.FILES['image']
 
-            messages.success(request, 'Has been saved successfully')
-        except Exception as e:
-            print(e)
-            messages.error(request, 'An error has occurred')
+            #     category = Category.objects.get(id=request.POST['category_id'])
+            #     article.category = category
 
-        return redirect('polls:article-new')
-        #return HttpResponseRedirect(reverse('polls:article-new'))
+            #     article.save()
+
+            #     messages.success(request, 'Has been saved successfully')
+            # except Exception as e:
+            #     print(e)
+            #     messages.error(request, 'An error has occurred')
+
+            return redirect('polls:article-create')
+        
+
+        # return HttpResponseRedirect(reverse('polls:article-new'))
     else:
-        categories = Category.objects.all()
+        form = ArticleForm()
+        #categories = Category.objects.all()
 
-        context = {
-            'categories': categories
-        }
+        # context = {
+        #     'form': form,
+        #     #'categories': categories
+        # }
 
-        return render(request, 'polls/article/create.html', context)
+
+    print(form)
+    return render(request, 'polls/articles/create.html', {'form': form})
 
 
-def article_list(request):
+def article_list_view(request):
 
-    articles = Article.objects.all()
+    articles = Article.objects.all().order_by('id')
 
     context = {
         'articles': articles
     }
 
-    return render(request, 'polls/article/list.html', context)
+    return render(request, 'polls/articles/list.html', context)
+
+
+def article_edit_view(request, id):
+
+    article = get_object_or_404(Article, id=id)
+    categories = Category.objects.all()
+
+    context = {'article': article, 'categories': categories}
+
+    return render(request, 'polls/articles/edit.html', context)
+
+
+def article_udpate_view(request, id):
+
+    if request.method == 'POST':
+
+        try:
+            article = Article.objects.get(id=id)
+            article.name = request.POST['name']
+            article.description = request.POST['description']
+            article.price = request.POST['price']
+
+            """Si contiene la imagen también la actualizamos"""
+            if len(request.FILES) != 0:
+                article.image = request.FILES['image']
+
+            category = Category.objects.get(id=request.POST['category_id'])
+            article.category = category
+
+            article.save()
+
+            messages.success(request, 'Has been updated successfully')
+
+            return redirect('polls:article-list')
+        except Exception as e:
+            print(e)
+            messages.error(request, 'An error has ocurred')
+        
+            return redirect('polls:article-edit', id=article.id)
+
+    else:
+        return render(request, 'polls/articles/edit.html')
+
+
+def article_delete_view(request, id):
+
+    article = get_object_or_404(Article, id=id)
+
+    context = {'article': article}
+
+    return render(request, 'polls/articles/delete.html', context)
