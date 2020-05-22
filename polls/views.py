@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from polls.models import Category, Article
-from polls.forms import ArticleForm, ArticleModelForm, CategoryForm, CategoryModelForm
+from polls.forms import ArticleForm, CategoryForm
 from django.contrib import messages
 
 # Create your views here.
@@ -10,49 +10,51 @@ from django.contrib import messages
 
 def article_create_view(request):
 
+    context = {}
+
     if request.method == 'POST':
 
-        form = ArticleForm(request.POST)
+        form = ArticleForm(request.POST, request.FILES)
 
         if form.is_valid():
             #form.save()
-            #print(form)
-            # try:
-            #     article = Article()
-            #     article.name = request.POST['name']
-            #     article.description = request.POST['description']
-            #     article.price = request.POST['price']
+            print(request.POST)
+            print(request.FILES)
+            try:
+                article = Article()
+                article.name = request.POST['name']
+                article.description = request.POST['description']
+                article.price = request.POST['price']
 
-            #     """Si contiene la imagen también la creamos"""
-            #     if len(request.FILES) != 0:
-            #         article.image = request.FILES['image']
+                """
+                Si contiene la imagen también la creamos
+                """
+                if len(request.FILES) != 0:
+                    article.image = request.FILES['image']
 
-            #     category = Category.objects.get(id=request.POST['category_id'])
-            #     article.category = category
+                category = Category.objects.get(id=request.POST['category'])
+                article.category = category
 
-            #     article.save()
+                article.save()
 
-            #     messages.success(request, 'Has been saved successfully')
-            # except Exception as e:
-            #     print(e)
-            #     messages.error(request, 'An error has occurred')
+                messages.success(request, 'Has been saved successfully')
+            except Exception as e:
+                print(e)
+                messages.error(request, 'An error has occurred')
 
-            return redirect('polls:article-create')
-        
+            return redirect('polls:article-list')
 
         # return HttpResponseRedirect(reverse('polls:article-new'))
     else:
         form = ArticleForm()
-        #categories = Category.objects.all()
 
-        # context = {
-        #     'form': form,
-        #     #'categories': categories
-        # }
+        
+    categories = Category.objects.all()
 
+    context['categories'] = categories
+    context['form'] = form
 
-    print(form)
-    return render(request, 'polls/articles/create.html', {'form': form})
+    return render(request, 'polls/articles/create.html', context)
 
 
 def article_list_view(request):
@@ -86,7 +88,9 @@ def article_udpate_view(request, id):
             article.description = request.POST['description']
             article.price = request.POST['price']
 
-            """Si contiene la imagen también la actualizamos"""
+            '''
+            Si contiene la imagen también la actualizamos
+            '''
             if len(request.FILES) != 0:
                 article.image = request.FILES['image']
 
@@ -101,7 +105,7 @@ def article_udpate_view(request, id):
         except Exception as e:
             print(e)
             messages.error(request, 'An error has ocurred')
-        
+
             return redirect('polls:article-edit', id=article.id)
 
     else:

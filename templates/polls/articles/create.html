@@ -3,89 +3,108 @@
 {% block content %}
 
 <h3>New article</h3>
+
 <hr />
-
-
 
 <form
     action="{% url 'polls:article-create' %}"
     method="post"
-    enctype="multipart/form-data"   
->
+    enctype="multipart/form-data">
+
     {% csrf_token %}
 
-
-     <select class="form-control" name="category_id">
-                <option value="">---</option>
-                <option value="2">Uno</option>
-                
-            </select>
-
-    {{ form.category_id.errors }}
-    
-
-    {% comment %} {% for field in form %}
-        {{ field.name }}
-
-        {{ field }}
-
-
-        {{ field.errors.email }}
-    {% endfor %} {% endcomment %}
-    {% comment %} <div class="form-group row">
-        <label for="name" class="col-sm-2 col-form-label">Name</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" name="name" />
-        </div>
-    </div>
     <div class="form-group row">
-        <label for="description" class="col-sm-2 col-form-label"
-            >Description</label
-        >
+        <label for="name" class="col-sm-2 col-form-label">Name</label>
+    
         <div class="col-sm-10">
-            <textarea rows="3" class="form-control" name="description"></textarea>
+            <input type="text" 
+                class="form-control {% if form.name.errors %} is-invalid {% endif %}" 
+                name="name" 
+                value="{{ form.name.value|default:'' }}"/>
+
+            {% if form.name.errors %}
+                <div class="invalid-feedback">{{ form.name.errors.0 }}</div>
+            {% endif %}
         </div>
     </div>
+
+    <div class="form-group row">
+        <label for="description" class="col-sm-2 col-form-label">Description</label>
+        <div class="col-sm-10">
+            <textarea rows="3" 
+                class="form-control {% if form.description.errors %} is-invalid {% endif %}" 
+                name="description"
+            >{{ form.description.value|default:'' }}</textarea>
+
+            {% if form.description.errors %}
+                <div class="invalid-feedback">{{ form.description.errors.0 }}</div>
+            {% endif %}
+        </div>
+    </div>
+
     <div class="form-group row">
         <label for="price" class="col-sm-2 col-form-label">Price</label>
         <div class="col-sm-10">
-            <input type="number" class="form-control" name="price" value="0.00" step="0.01"/>
+            <input type="number" 
+                class="form-control {% if form.price.errors %} is-invalid {% endif %}" 
+                name="price" 
+                value="{{ form.price.value|default:'0' }}" 
+                step="0.01"
+            />
+
+            {% if form.price.errors %}
+                <div class="invalid-feedback">{{ form.price.errors.0 }}</div>
+            {% endif %}
         </div>
     </div>
+
     <div class="form-group row">
-        <label for="image" class="col-sm-2 col-form-label"
-            >Image</label>
+        <label for="image" class="col-sm-2 col-form-label">Image</label>
+       
         <div class="col-sm-10">
-            <input type="file" class="form-control" name="image" />
+            <input type="file" 
+                class="form-control {% if form.image.errors %} is-invalid {% endif %}" 
+                name="image"
+            />
+            {% if form.image.errors %}
+                <div class="invalid-feedback">{{ form.image.errors.0 }}</div>
+            {% endif %}
         </div>
     </div>
+
     <div class="form-group row">
-        <label for="category" class="col-sm-2 col-form-label"
-            >Category</label>
+        <label for="category" class="col-sm-2 col-form-label">Category</label>
         <div class="col-sm-10">
-            <select class="form-control" name="category_id">
+            <select class="form-control {% if form.category.errors %} is-invalid {% endif %}" 
+                name="category"
+            >
+                <option value="">---------</option>
                 {% for category in categories %}
-                <option value="{{ category.id }}">{{ category.name }}</option>
+                    <option value="{{ category.id }}"
+                        {% if category.id == form.category.value|add:0 %} selected {% endif %}>
+                        {{ category.name }}
+                    </option>
                 {% endfor %}
             </select>
+
+            {% if form.category.errors %}
+                <div class="invalid-feedback">{{ form.category.errors.0 }}</div>
+            {% endif %}
         </div>
     </div>
+
     <div class="form-group row">
-        <div class="col-sm-4 offset-sm-2">
-            <button type="submit" class="btn btn-primary">
+        <div class="col-xs-12 col-sm-5 offset-sm-2 col-md-5 offset-md-2 mt-2">
+            <button type="submit" class="btn btn-primary btn-block">
                 Save
             </button>
         </div>
-        <div class="col-sm-6 text-right"> 
-            <a href="{% url 'polls:article-list' %}" class="btn btn-danger">
+        <div class="col-xs-12 col-sm-5 col-md-5 mt-2">
+            <a href="{% url 'polls:article-list' %}" class="btn btn-danger btn-block">
                 Cancel
             </a>
         </div>
-    </div> {% endcomment %}
-
-     <button type="submit" class="btn btn-primary">
-        Save
-    </button>
+    </div> 
 </form>
 
 {% endblock %}

@@ -44,11 +44,13 @@
         <tr>
             <th scope="row">{{ forloop.counter }}</th>
             <td>
+                {% if article.image %}
                 <img
                     style="width: 20px; height: 20px;"
                     src="{{ article.image.url }}"
                     class="img-thumbnail"
                 />
+                {% endif %}
             </td>
             <td>{{ article.name }}</td>
             <td>{{ article.description }}</td>

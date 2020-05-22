@@ -4,10 +4,10 @@ from polls.models import Article, Category
 
 class ArticleForm(forms.Form):
     name = forms.CharField()
-    description = forms.CharField()
+    description = forms.CharField(required=False)
     price = forms.DecimalField()
     image = forms.ImageField()
-    category_id = forms.ModelChoiceField(queryset=Category.objects.all())
+    category = forms.ModelChoiceField(queryset=Category.objects.all())
 
 
     # name = forms.CharField()
@@ -22,15 +22,15 @@ class ArticleForm(forms.Form):
     #     self.fields['category'].queryset = Category.objects.all()
 
 
-class ArticleModelForm(forms.ModelForm):
-    # categoryx = forms.ModelChoiceField(Category.objects)
-    def __init__(self, *args, **kwargs):
-        super(ArticleModelForm, self).__init__(*args, **kwargs)
-        self.fields['category'].queryset = Category.objects.all()[:1]
+# class ArticleModelForm(forms.ModelForm):
+#     # categoryx = forms.ModelChoiceField(Category.objects)
+#     def __init__(self, *args, **kwargs):
+#         super(ArticleModelForm, self).__init__(*args, **kwargs)
+#         self.fields['category'].queryset = Category.objects.all()[:1]
 
-    class Meta:
-        model = Article
-        fields = ('name', 'description', 'price', 'image', 'category')
+#     class Meta:
+#         model = Article
+#         fields = ('name', 'description', 'price', 'image', 'category')
 
 
 class CategoryForm(forms.Form):
@@ -38,13 +38,13 @@ class CategoryForm(forms.Form):
     description = forms.CharField()
 
 
-class CategoryModelForm(forms.ModelForm):
-    namex = forms.CharField(widget=forms.TextInput(
-        attrs={'class': 'form-control', 'id': 'name'}))
+# class CategoryModelForm(forms.ModelForm):
+#     namex = forms.CharField(widget=forms.TextInput(
+#         attrs={'class': 'form-control', 'id': 'name'}))
 
-    class Meta:
-        model = Category
-        fields = ('name', 'description')
+#     class Meta:
+#         model = Category
+#         fields = ('name', 'description')
         # exclude = ['name']
 
         # widgets = {
