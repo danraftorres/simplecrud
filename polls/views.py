@@ -4,10 +4,10 @@ from django.http import HttpResponseRedirect
 from polls.models import Category, Article
 from polls.forms import ArticleForm, CategoryForm
 from django.contrib import messages
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.utils.datastructures import MultiValueDictKeyError
 
 # Create your views here.
-
-
 def article_create_view(request):
 
     context = {}
@@ -17,7 +17,7 @@ def article_create_view(request):
         form = ArticleForm(request.POST, request.FILES)
 
         if form.is_valid():
-            #form.save()
+            # form.save()
             print(request.POST)
             print(request.FILES)
             try:
@@ -48,7 +48,6 @@ def article_create_view(request):
     else:
         form = ArticleForm()
 
-        
     categories = Category.objects.all()
 
     context['categories'] = categories
@@ -60,9 +59,39 @@ def article_create_view(request):
 def article_list_view(request):
 
     articles = Article.objects.all().order_by('id')
+    # 5 registros por pagina
+    paginator = Paginator(articles, 5)
+
+    '''
+    Si no encuentra valor de page, pone por defecto 1
+    '''
+    #request.GET['page'] if 'page' in request.GET else 1
+    page_number = request.GET.get('page', 1)
+
+    '''
+    Intentando con try catch
+
+    try: 
+        page_number = request.GET['page'] 
+    except MultiValueDictKeyError: 
+        page_number = 1
+
+    page_number = request.GET.get('page', 1)
+    '''
+
+    try:
+        page_obj = paginator.get_page(page_number)
+    except PageNotAnInteger as e:
+        print(e)
+        page_obj = paginator.get_page(1)
+    except EmptyPage as e:
+        print(e)
+        page_obj = paginator.page(paginator.num_pages)
+
+
 
     context = {
-        'articles': articles
+        'page_obj': page_obj
     }
 
     return render(request, 'polls/articles/list.html', context)
@@ -116,6 +145,12 @@ def article_delete_view(request, id):
 
     article = get_object_or_404(Article, id=id)
 
-    context = {'article': article}
+    if request.method == 'POST':
+        article.delete()
+
+        messages.success(request, 'Has been deleted item')
+        return redirect('polls:article-list')
+    else:
+        context = {'article': article}
 
     return render(request, 'polls/articles/delete.html', context)
