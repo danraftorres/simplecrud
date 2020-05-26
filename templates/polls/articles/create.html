@@ -1,13 +1,9 @@
 {% extends 'base.html' %} 
 
 {% block content %}
-
 <h3>New article</h3>
-
 <hr />
-
-<form
-    action="{% url 'polls:article-create' %}"
+<form action="{% url 'polls:article-create' %}"
     method="post"
     enctype="multipart/form-data">
 
@@ -15,7 +11,7 @@
 
     <div class="form-group row">
         <label for="name" class="col-sm-2 col-form-label">Name</label>
-    
+
         <div class="col-sm-10">
             <input type="text" 
                 class="form-control {% if form.name.errors %} is-invalid {% endif %}" 
@@ -75,13 +71,11 @@
     <div class="form-group row">
         <label for="category" class="col-sm-2 col-form-label">Category</label>
         <div class="col-sm-10">
-            <select class="form-control {% if form.category.errors %} is-invalid {% endif %}" 
-                name="category"
-            >
+            <select class="form-control {% if form.category.errors %} is-invalid {% endif %}" name="category">
                 <option value="">---------</option>
                 {% for category in categories %}
                     <option value="{{ category.id }}"
-                        {% if category.id == form.category.value|add:0 %} selected {% endif %}>
+                        {% if category.id == form.category.value|add:0|default:'' %} selected {% endif %}>
                         {{ category.name }}
                     </option>
                 {% endfor %}
@@ -106,5 +100,4 @@
         </div>
     </div> 
 </form>
-
 {% endblock %}

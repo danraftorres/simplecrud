@@ -3,7 +3,7 @@ from polls.models import Article, Category
 
 
 class ArticleForm(forms.Form):
-    name = forms.CharField()
+    name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     description = forms.CharField(required=False)
     price = forms.DecimalField()
     image = forms.ImageField()
@@ -33,20 +33,30 @@ class ArticleForm(forms.Form):
 #         fields = ('name', 'description', 'price', 'image', 'category')
 
 
-class CategoryForm(forms.Form):
-    name = forms.CharField(max_length=150)
-    description = forms.CharField()
+class CategoryModelForm(forms.Form):
+    
+    name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'})) #'id': 'name'
+    description = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}))
 
-
-# class CategoryModelForm(forms.ModelForm):
-#     namex = forms.CharField(widget=forms.TextInput(
-#         attrs={'class': 'form-control', 'id': 'name'}))
-
-#     class Meta:
-#         model = Category
-#         fields = ('name', 'description')
-        # exclude = ['name']
+    def is_valid(self):
+        result = super().is_valid()
+        # loop on *all* fields if key '__all__' found else only on errors:
+        print(f'self.erros---->{self.errors}')
+        print(f'self.fields--->{self.fields}')
+        for field in self.errors: #(self.fields if '__all__' in self.errors else self.errors):
+            print(field)
+            attrs = self.fields[field].widget.attrs
+            print(f'attttrs  ---->{attrs}')
+            attrs.update({'class': attrs.get('class', '') + ' is-invalid'})
+        return result
+        print(f'is valid--------->{result}')
+    
+    class Meta:
+        model = Category
+    #     fields = ('name', 'description')
 
         # widgets = {
-        #     'name': forms.TextInput(attrs={'class': 'form-control', 'id': 'name'})
+        #     'name': forms.TextInput(attrs={'class': 'form-control', 'id': 'name'}),
+        #     'description': forms.Textarea(attrs={'class': 'form-control'})
         # }
+

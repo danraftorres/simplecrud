@@ -2,12 +2,14 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from polls.models import Category, Article
-from polls.forms import ArticleForm, CategoryForm
+from polls.forms import ArticleForm, CategoryModelForm
 from django.contrib import messages
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.utils.datastructures import MultiValueDictKeyError
 
-# Create your views here.
+#-------------------------------------
+#              ARTICLES
+#-------------------------------------
 def article_create_view(request):
 
     context = {}
@@ -88,8 +90,6 @@ def article_list_view(request):
         print(e)
         page_obj = paginator.page(paginator.num_pages)
 
-
-
     context = {
         'page_obj': page_obj
     }
@@ -100,50 +100,58 @@ def article_list_view(request):
 def article_edit_view(request, id):
 
     article = get_object_or_404(Article, id=id)
-    categories = Category.objects.all()
-
-    context = {'article': article, 'categories': categories}
-
-    return render(request, 'polls/articles/edit.html', context)
-
-
-def article_udpate_view(request, id):
 
     if request.method == 'POST':
+        form = ArticleForm(request.POST, request.FILES)
 
-        try:
-            article = Article.objects.get(id=id)
-            article.name = request.POST['name']
-            article.description = request.POST['description']
-            article.price = request.POST['price']
+        if 'image' not in request.FILES:
+            form.fields['image'].required = False
+            image = False
+        # print(request.POST)
 
-            '''
-            Si contiene la imagen también la actualizamos
-            '''
-            if len(request.FILES) != 0:
-                article.image = request.FILES['image']
+        if form.is_valid():
+            try:
+                article.name = request.POST['name']
+                article.description = request.POST['description']
+                article.price = request.POST['price']
 
-            category = Category.objects.get(id=request.POST['category_id'])
-            article.category = category
+                if image:
+                    article.image = request.FILES['image']
 
-            article.save()
+                category = Category.objects.get(id=request.POST['category'])
+                article.category = category
 
-            messages.success(request, 'Has been updated successfully')
+                article.save()
+                print(request.FILES)
 
-            return redirect('polls:article-list')
-        except Exception as e:
-            print(e)
-            messages.error(request, 'An error has ocurred')
+                messages.success(request, 'Has been updated successfully')
 
-            return redirect('polls:article-edit', id=article.id)
+                return redirect('polls:article-list')
+            except Exception as e:
+                print(e)
+                message.error(request, 'An error has ocurred')
 
+                return redirect('polls:article-edit', id=article.id)
+            # print(request.POST)
     else:
-        return render(request, 'polls/articles/edit.html')
+        form = ArticleForm()
+
+    categories = Category.objects.all()
+
+    context = {
+        'article': article,
+        'categories': categories,
+        'form': form
+    }
+
+    return render(request, 'polls/articles/edit.html', context)
 
 
 def article_delete_view(request, id):
 
     article = get_object_or_404(Article, id=id)
+
+    print(article)
 
     if request.method == 'POST':
         article.delete()
@@ -154,3 +162,37 @@ def article_delete_view(request, id):
         context = {'article': article}
 
     return render(request, 'polls/articles/delete.html', context)
+
+#---------------------------------
+#       CATEGORIES
+#---------------------------------
+def category_list_view(request):
+    return render(request, 'polls/categories/list.html')
+
+
+def category_create_view(request):
+
+
+    if request.method == 'POST':
+        form = CategoryModelForm(request.POST)
+
+        print(request.POST)
+
+        if form.is_valid():
+            print(f'POST ------------>{request.POST}')
+        else:
+            print(form)
+
+        
+        #return redirect('polls:category-create')
+    else:
+        form = CategoryModelForm()
+
+    context = {
+        'form': form
+    }
+
+   
+
+
+    return render(request, 'polls/categories/create.html', context)

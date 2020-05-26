@@ -1,27 +1,9 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} 
+
+{% block content %}
 <h3>Article List</h3>
 <hr />
 <form class="form-inline row">
-    <!-- <div class="input-group col-sm-6 mb-3">
-        <div class="input-group-prepend">
-            <div class="input-group-text">
-                <i class="fas fa-search"></i>
-            </div>
-        </div>
-        <input
-            type="text"
-            class="form-control"
-            name="search"
-            placeholder="Name"
-        />
-    </div>
-
-    <div class="form-check col-sm-4 mb-3">
-        <input class="form-check-input" type="checkbox" id="inlineFormCheck" />
-        <label class="form-check-label" for="inlineFormCheck">
-            Remember me
-        </label>
-    </div> -->
 
     <div class="col-sm-12 mb-3 text-right">
         <a href="{% url 'polls:article-create' %}"class="btn btn-primary">New</a>
