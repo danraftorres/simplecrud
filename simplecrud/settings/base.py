@@ -27,10 +27,10 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 #SECRET_KEY = '9oy)p4sbdpam14-5lpy2izv1$h6b86@-$bxw!iv(v%*hpg5slb'
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env.str('SECRET_KEY', default='9oy)p4sbdpam14-5lpy2izv1$h6b86@-$bxw!iv(v%*hpg5slb')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG', default=False)
+DEBUG = env.bool('DEBUG', default=True)
 
 #ALLOWED_HOSTS = []
 
