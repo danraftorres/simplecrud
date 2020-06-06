@@ -1,0 +1,87 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+<h3>Article List</h3>
+<hr />
+<form class="form-inline row">
+
+    <div class="col-sm-12 mb-3 text-right">
+        <a href="{% url 'polls:article-create' %}"class="btn btn-primary">New</a>
+    </div>
+</form>
+<table class="table text-center">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Image</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Price</th>
+            <th scope="col">Category</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for article in page_obj %}
+        <tr>
+            <th scope="row">{{ page_obj.start_index|add:forloop.counter0 }}</th>
+            <td>
+                {% if article.image %}
+                <img
+                    style="width: 20px; height: 20px;"
+                    src="{{ article.image.url }}"
+                    class="img-thumbnail"
+                />
+                {% endif %}
+            </td>
+            <td>{{ article.name }}</td>
+            <td>{{ article.description }}</td>
+            <td>$ {{ article.price }}</td>
+            <td>{{ article.category.name }}</td>
+            <td>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <a href="{% url 'polls:article-delete' article.id %}" class="far fa-trash-alt text-danger"></a>
+                    </div>
+                    <div class="col-sm-6">
+                        <a href="{% url 'polls:article-edit' article.id %}" class="fas fa-pencil-alt text-primary"></a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+        {% else %}
+        <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+        {% endif %}
+
+        {% for page in page_obj.paginator.page_range %}
+            {% if page_obj.number == page %}
+            <li class="page-item active">
+                <span class="page-link">
+                    {{ page }}
+                    <span class="sr-only">(current)</span>
+                </span>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+            </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+        {% else %}
+        <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+        {% endif %}
+    </ul>
+</nav>
+
+{% endblock %}

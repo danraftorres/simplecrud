@@ -1,0 +1,24 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+<div class="text-center">
+    <form method="POST" action="{% url 'polls:article-delete' article.id %}">
+        {% csrf_token %}
+        <div class="jumbotron">
+            <h1 class="display-4"><i class="far fa-bell"></i></h1>
+            <p class="lead">
+                Are you sure you want to delete the selected article?
+            </p>
+            <hr class="my-4" />
+            <p>
+                All of the following objects and their related items will be deleted: 
+                <li>{{ article.name }}</li>     
+            </p>
+            <p class="lead">
+                <button type="submit" class="btn btn-info">Sure</button>
+                <a class="btn btn-danger" href="{% url 'polls:article-list' %}">Cancel</a>
+            </p>
+        </div>
+    </form>
+</div>
+{% endblock %}

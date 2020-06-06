@@ -55,7 +55,7 @@ def article_create_view(request):
     context['categories'] = categories
     context['form'] = form
 
-    return render(request, 'polls/articles/create.html', context)
+    return render(request, 'create.html', context)
 
 
 def article_list_view(request):
@@ -94,7 +94,7 @@ def article_list_view(request):
         'page_obj': page_obj
     }
 
-    return render(request, 'polls/articles/list.html', context)
+    return render(request, 'list.html', context)
 
 
 def article_edit_view(request, id):
@@ -144,7 +144,7 @@ def article_edit_view(request, id):
         'form': form
     }
 
-    return render(request, 'polls/articles/edit.html', context)
+    return render(request, 'edit.html', context)
 
 
 def article_delete_view(request, id):
@@ -161,7 +161,7 @@ def article_delete_view(request, id):
     else:
         context = {'article': article}
 
-    return render(request, 'polls/articles/delete.html', context)
+    return render(request, 'delete.html', context)
 
 #---------------------------------
 #       CATEGORIES
