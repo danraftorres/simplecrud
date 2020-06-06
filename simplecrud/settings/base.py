@@ -88,12 +88,12 @@ WSGI_APPLICATION = 'simplecrud.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': env.str('DATABASE_ENGINE'),
-        'NAME': env.str('DATABASE_NAME'),
-        'USER': env.str('DATABASE_USER'),
-        'PASSWORD': env.str('DATABASE_PASSWORD'),
-        'HOST': env.str('DATABASE_HOST'),
-        'PORT': env.int('DATABASE_PORT'),
+        'ENGINE': env.str('DATABASE_ENGINE', default=''),
+        'NAME': env.str('DATABASE_NAME', default=''),
+        'USER': env.str('DATABASE_USER', default=''),
+        'PASSWORD': env.str('DATABASE_PASSWORD', default=''),
+        'HOST': env.str('DATABASE_HOST', default=''),
+        'PORT': env.int('DATABASE_PORT', default=0),
     },
 }
 
