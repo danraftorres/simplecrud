@@ -11,29 +11,21 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-import environ
+from setup import * #django-environ
 from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 # settings.py os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Setup settings django-environ
-env = environ.Env()
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = '9oy)p4sbdpam14-5lpy2izv1$h6b86@-$bxw!iv(v%*hpg5slb'
 SECRET_KEY = env.str('SECRET_KEY', default='9oy)p4sbdpam14-5lpy2izv1$h6b86@-$bxw!iv(v%*hpg5slb')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=True)
-
-#ALLOWED_HOSTS = []
-
 
 # Application definition
 DJANGO_APPS = [
@@ -84,18 +76,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'simplecrud.wsgi.application'
-
-
-DATABASES = {
-    'default': {
-        'ENGINE': env.str('DATABASE_ENGINE', default=''),
-        'NAME': env.str('DATABASE_NAME', default=''),
-        'USER': env.str('DATABASE_USER', default=''),
-        'PASSWORD': env.str('DATABASE_PASSWORD', default=''),
-        'HOST': env.str('DATABASE_HOST', default=''),
-        'PORT': env.int('DATABASE_PORT', default=0),
-    },
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

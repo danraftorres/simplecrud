@@ -2,9 +2,10 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from setup import *
 
 def main():
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'simplecrud.settings.production')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'simplecrud.settings.local')
 
     try:
         from django.core.management import execute_from_command_line
