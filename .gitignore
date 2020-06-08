@@ -138,5 +138,6 @@ dmypy.json
 # Code editors settings workspace
 *.vscode
 *.idea
+docs.txt
 
 # End of https://www.toptal.com/developers/gitignore/api/django
